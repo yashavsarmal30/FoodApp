@@ -1,0 +1,22 @@
+# pip install customtkinter           # GUI Framework
+# pip install captcha                 # For Captcha
+# pip install argon2-cffi             # For Hashing
+# pip install pillow                  # For customtkinter Image's  
+# pip install tkcalendar              # For Calender Input
+# pip install python-dotenv           # For .env file
+# pip install psycopg2-binary         #|For PostgreSql
+# pip install psycopg2                #|For PostgreSql   
+# pip install ipapi                   # To Fetch Ip Location
+# pip install plyer                   # For Notifications
+
+
+customtkinter       
+captcha             
+argon2-cffi         
+pillow              
+tkcalendar          
+python-dotenv       
+psycopg2-binary     
+psycopg2            
+ipapi                
+plyer               

@@ -1,0 +1,42 @@
+1,John Doe,johndoe,myseries1020+1@gmail.com,"$argon2id$v=19$m=65536,t=3,p=4$MXm769Mt20t/HutWcnnJsg$0N9YS07Jh/RLQ6XrE3urJahNQhOuu1ezFLlW+DOuOPk",1234567890,f,Male,1990-01-01,1234567890,"ABC Bank, Account No: 123456789",
+2,Admin User,adminuser,myseries1020+2@gmail.com,"$argon2id$v=19$m=65536,t=3,p=4$V/JPkREQeBez9dDzi7pFsQ$rKUWd0955J0SQlU+QLaYTVAp0kEWltCeKpFs8py43cM",9876543210,t,Male,1985-01-01,9876543210,"XYZ Bank, Account No: 987654321",
+3,Will Smith,wsmith,myseries1020+3@gmail.com,"$argon2id$v=19$m=65536,t=3,p=4$LEqPKVOukv9SkgDfnFY9LA$gI0Pvq7NqK67uXeuMp9lVbxkjIvNqSTe0sQ6uzXKeN8",7410258963,f,Male,2000-12-01,,,"A/52 NorthSide , Toranto , Canada
+"
+8,hdskdh,U-hdskdh,SK@HSK.COM,"$argon2id$v=19$m=65536,t=3,p=4$Sc/MTdsiw4Y36At0O5GPEw$BhAZ7p4FfxwRZ4kF+K1g3UkmJ3H9dWsFYV+L+1p5UWM",4541545458,t,Male,2024-03-13,AIHIWR,AHROAHOH OHWOPHFOHFOP HFOP,
+9,jonny baba,jonnybaba,myseries1020+5@gmail.com,"$argon2id$v=19$m=65536,t=3,p=4$W+Li+GZg9HsglgyCIbvXiQ$/VR7bBmZh5napcMABvD3P5u6leYZdV+5YBJIhGIWCvA",1236547890,f,Male,2000-03-02,,,"kfaibfaif
+saf
+asihfisaf
+hashf
+"
+10,Komal Mehta,foodiekomal,komalmehta080306@gmail.com,"$argon2id$v=19$m=65536,t=3,p=4$NRkVP4EL4G9RyiGyCWiIBg$9MNkRdww4kUm60t6ABa8c7/ex3b6wnBUtDvptO0UNhU",8569743212,f,Female,2006-03-08,,,"Mansi Building , vasai west , Mumbai
+"
+11,Rohit Kumar,U-Rohit Kumar,RohitKumar@mail.com,"$argon2id$v=19$m=65536,t=3,p=4$sf+V8Gs7kgJkGGGyzhBRvw$NAuECb2V1P8k1cxAIn7Se7jQGgJp0t0XyRTUVqNEovo",7456982310,t,Male,1995-03-09,IFSH54FSS4,87464916413464665 AOSJFS6FS UNION BANK,
+12,Umesh Mehta,umeshmehta,kmehta080306@gmail.com,"$argon2id$v=19$m=65536,t=3,p=4$T6JQgt2IhuAK/OHlMmfOxQ$dwdsBCU5pT5gsNfmYSVxeuY/DOoIKo78Ok7R9PKINf8",1234556678,f,Male,2024-02-05,,,"adfdaf
+adgfg
+"
+13,BalaKrishna,U-BalaKrishna,BalaKrishna@email.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",1235469873,t,Male,1975-05-09,DDFA45FSA5,7458963254879632 SF5FA5AS BOI,"IRLA , VILE PARLA , MUMBAI"
+14,David Wilson,davidw,davidwilson@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",1122334455,t,Male,1980-05-20,EFGH987654,2468 1357 9132 8647,
+15,Elizabeth Garcia,elizabethg,elizabethgarcia@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",2233445566,t,Female,1975-03-15,IJKL543210,7890 2468 7531 8029,
+16,Christopher Martinez,christopherm,christophermartinez@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",3344556677,t,Male,1982-11-10,MNOP432109,9512 3579 8024 6847,
+17,Mary Hernandez,maryh,maryhernandez@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",4455667788,t,Female,1978-06-25,QRST321098,3579 8024 6847 9512,
+18,Daniel Lopez,daniell,daniellopez@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",5566778899,t,Male,1984-09-05,UVWX210987,8024 6847 9512 3579,
+19,Patricia Gonzalez,patriciag,patriciagonzalez@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",6677889900,t,Female,1986-12-20,YZAB109876,6847 9512 3579 8024,
+20,John Rodriguez,johnr,johnrodriguez@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",7788990011,t,Male,1979-04-12,BCDE098765,3579 8024 6847 9512,
+21,Michael Smith,U-michael,admin@example.com,"$argon2id$v=19$m=65536,t=3,p=4$EenZQ20mx7u30D2Cu8xT1A$MYIyE94E8ekF1O3BpR4tVtrLv3mzhgdMU+kneXSZSD8",1234567890,t,Male,1980-05-20,ABC123456,1234 5678 9012 3456,
+22,hhh hhh,hsdhs,shudhs@sunmist.maskmy.id,"$argon2id$v=19$m=65536,t=3,p=4$oRn1p2Wxpzx1Eg7aT7Cf6Q$SlX3NWMFjNJIqWw+R9iSJMbkHoqCZ60fMV3HSmX1fwI",7458742355,f,Female,2024-04-09,,,"jasbdjasbda
+dsadhsa
+odsad
+sd
+sah
+d
+"
+23,4rff r4dr,fr4tf4fndgj,f4eh@fdfe.he,"$argon2id$v=19$m=65536,t=3,p=4$U8KryWFfx1dEbZ+YfXgc3A$uvBosqdw6rrL7kZDbrX7byivDs+ZywmRh0+/gr1WK/A",9876587767,f,Male,2018-04-05,,,"tt5tvtgt5gtgg
+tg
+5g
+"
+24,xyxuser xyz,xyz,myseries1020+6@gmail.com,"$argon2id$v=19$m=65536,t=3,p=4$H737XKmhrqFot6qn3yqXPw$e8SSaKR4lSa0TL4G+xMXCWwreWFigHOrJ40bJ/s2TjM",7412365890,f,Male,2015-11-05,,,"A / Hsdhsdi
+adihaipahdia
+adhiaidha
+da
+ddhsdishdi
+"
