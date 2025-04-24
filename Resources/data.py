@@ -1,0 +1,124 @@
+from database import Database  # Adjust this import based on your file structure
+
+# Raw multiline string of data
+raw_data = """
+1,1,Margherita Pizza,"Classic tomato, basil, and mozzarella cheese pizza",699.00,t,Pizza
+2,3,FarmHouse Pizza,"Delightful combination of onion, capsicum, tomato & grilled mushroom",459.00,t,Pizza
+3,3,Margherita Pizza,"Classic Italian pizza topped with tomato sauce, fresh mozzarella, and basil leaves",399.00,t,Pizza
+4,3,Chicken Alfredo Pasta,"Creamy pasta with grilled chicken, mushrooms, and Alfredo sauce",549.00,t,Pasta
+5,3,Vegetable Lasagna,Layers of pasta filled with assorted vegetables and creamy cheese sauce,499.00,t,Pasta
+6,3,Grilled Salmon,Grilled salmon fillet served with roasted vegetables and lemon butter sauce,699.00,t,Seafood
+7,3,Shrimp Scampi,Juicy shrimp sautéed in garlic butter and served over a bed of linguine pasta,599.00,t,Seafood
+8,3,Caesar Salad,"Fresh romaine lettuce tossed with Caesar dressing, croutons, and Parmesan cheese",299.00,t,Salad
+9,3,Mushroom Risotto,"Creamy risotto rice cooked with mushrooms, onions, and Parmesan cheese",479.00,t,Risotto
+10,3,Tiramisu,Classic Italian dessert made with layers of coffee-soaked ladyfingers and mascarpone cheese,349.00,t,Dessert
+11,3,New York Cheesecake,Rich and creamy cheesecake with a graham cracker crust,399.00,t,Dessert
+22,4,BBQ Chicken Burger,"Grilled chicken breast with BBQ sauce, lettuce, tomato, and onions in a sesame seed bun",499.00,t,Burger
+23,4,Veggie Burger,"A flavorful vegetarian patty made with assorted vegetables, served with lettuce, tomato, and mayo",449.00,t,Burger
+24,4,Steak Frites,Grilled sirloin steak served with crispy French fries and a side of garlic aioli,799.00,t,Entree
+25,4,Vegetable Stir Fry,"Assorted fresh vegetables stir-fried in a savory sauce, served with steamed rice",429.00,t,Entree
+26,4,Caprese Salad,"Fresh mozzarella cheese, ripe tomatoes, and basil leaves drizzled with balsamic glaze",349.00,t,Salad
+27,4,Spaghetti Bolognese,"Spaghetti pasta topped with rich meat sauce made with ground beef, tomatoes, and herbs",549.00,t,Pasta
+28,4,Margarita Cocktail,"Classic cocktail made with tequila, triple sec, lime juice, and a salt rim",349.00,t,Beverage
+29,4,Mojito,"Refreshing cocktail made with rum, mint leaves, lime juice, sugar, and soda water",379.00,t,Beverage
+30,4,Chocolate Lava Cake,"Decadent chocolate cake with a molten chocolate center, served with vanilla ice cream",449.00,t,Dessert
+31,4,Fruit Platter,Assorted fresh seasonal fruits served with a honey-yogurt dip,299.00,t,Dessert
+32,4,Tomato Soup,Fresh tomato & herbs naturally flavored with a dash of cream,125.00,t,Soup
+33,4,Veg Manchurian Soup,,99.00,t,Soup
+34,4,Dal Shorba,Lentil shorba with vegetables,105.00,t,Soup
+35,4,Hara Bhara Kebab,Spinach patty with a mild flavor filled with nuts & shallow fried.,299.00,t,Starter
+36,4,Chilli Paneer,"Cottage cheese sautéed with three pepper, garlic & onion in soya sauce",299.00,t,Starter
+37,4,Paneer Angara Tikka,"Barbecued chunks of cottage cheese skewered with vegetables, flavored with exotic spices",315.00,t,Starter
+38,4,Honey Chilli Potato,Crispy fried potato finger tossed with honey chilli sauce,199.00,t,Starter
+39,4,Veg Thali,Dal Tadka + Mix Veg + Shahi Paneer + 2 Roti + Green Salad + Rice,199.00,t,Thali
+40,4,Veg Deluxe Thali,Dal Makhani + Mix Veg + Kadhai Paneer + Rice + Green Salad + Gulab Jamun (1 Piece) + 1 Laccha Paratha + 1 Butter Roti + Papad,299.00,t,Thali
+41,4,Tandoori Roti,Indian bread made out of wheat flour and baked in tandoor,30.00,t,Roti
+42,4,Butter Roti,Indian bread made out of wheat flour and butter baked in tandoor,35.00,t,Roti
+43,4,Naan,Gram flour and wheat flour kneaded with herbs and cooked in tandoor,69.00,t,Roti
+44,4,Butter Naan,Refined flour bread cooked in tandoor,85.00,t,Roti
+45,4,Plain Rice,Boiled plain rice,159.00,t,Rice & Biryani
+46,4,Peas Pulav,Steamed rice tossed with butter & green peas.,199.00,t,Rice & Biryani
+47,4,Jeera Rice,Steamed rice with butter and jeera rice,169.00,t,Rice & Biryani
+48,4,Sabz Biryani,Raita with gravy,349.00,t,Rice & Biryani
+49,4,Dal Makhani,,279.00,t,Main Course
+50,4,Dal Tadka,,259.00,t,Main Course
+51,4,Malai Kofta,,349.00,t,Main Course
+52,4,Paneer Tikka Masala,,299.00,t,Main Course
+53,4,Palak Paneer,,319.00,t,Main Course
+54,4,Paneer Do Pyaza,,309.00,t,Main Course
+55,4,Paneer Pasanda,,309.00,t,Main Course
+56,4,Sada Dosa,,100.00,t,Breakfast Special
+57,4,Butter Sada Dosa,,110.00,t,Breakfast Special
+58,4,Masala Dosa,,120.00,t,Breakfast Special
+59,4,Butter Masala Dosa,,130.00,t,Breakfast Special
+60,4,Rava Sada Dosa,,120.00,t,Breakfast Special
+61,4,Rava Masala Dosa,,130.00,t,Breakfast Special
+62,4,Onion Uttapam,,120.00,t,Breakfast Special
+63,4,Tomato Uttapam,,120.00,t,Breakfast Special
+64,4,Idli,,100.00,t,Breakfast Special
+65,4,Medu Vada,,120.00,t,Breakfast Special
+66,4,Pav Bhaji,,170.00,t,Pav Bhaji
+67,4,Cheese Pav Bhaji,,200.00,t,Pav Bhaji
+68,4,Jain Pav Bhaji,,180.00,t,Pav Bhaji
+69,4,Jain Cheese Pav Bhaji,,210.00,t,Pav Bhaji
+70,4,Masala Pav,,150.00,t,Pav Bhaji
+71,4,Butter Pav,,40.00,t,Pav Bhaji
+96,5,Classic Burger,"100% beef patty with lettuce, tomato, onion, and special sauce",8.99,t,Burgers
+97,5,Chicken Wings,Crispy chicken wings served with your choice of sauce,9.99,t,Appetizers
+98,5,Fish and Chips,Battered fish fillets served with fries and tartar sauce,12.99,t,Seafood
+99,6,Mediterranean Salad,"Fresh mixed greens with olives, feta cheese, cucumbers, and vinaigrette",10.99,t,Salads
+100,6,Grilled Salmon,Grilled salmon fillet served with roasted vegetables and couscous,18.99,t,Seafood
+101,6,Lamb Gyro,Tender slices of seasoned lamb with tzatziki sauce in warm pita bread,14.99,t,Sandwiches
+102,7,Margherita Pizza,"Traditional pizza with tomato sauce, mozzarella cheese, and fresh basil",11.99,t,Pizza
+103,7,Caprese Panini,"Fresh mozzarella, tomatoes, and basil pesto pressed in ciabatta bread",8.99,t,Panini
+104,7,Tiramisu,Classic Italian dessert made with layers of coffee-soaked ladyfingers and mascarpone cheese,6.99,t,Desserts
+105,8,French Onion Soup,"Rich beef broth with caramelized onions, topped with melted cheese",7.99,t,Soups
+106,8,Coq au Vin,"Classic French dish of chicken braised with wine, mushrooms, and onions",16.99,t,Entrees
+107,8,Crème Brûlée,"Creamy custard topped with caramelized sugar, served chilled",8.99,t,Desserts
+108,9,Reuben Sandwich,"Corned beef, Swiss cheese, sauerkraut, and Russian dressing on rye bread",10.99,t,Sandwiches
+109,9,Turkey Club Wrap,"Turkey, bacon, lettuce, tomato, and mayo wrapped in a flour tortilla",9.99,t,Wraps
+110,9,Matzo Ball Soup,"Chicken broth with tender matzo balls, carrots, and celery",6.99,t,Soups
+111,10,Pepperoni Pizza,Classic pizza topped with pepperoni and mozzarella cheese,13.99,t,Pizza
+112,10,Vegetarian Calzone,"Calzone stuffed with mushrooms, bell peppers, onions, and cheese",11.99,t,Calzone
+113,10,Garlic Knots,Twisted bread knots brushed with garlic butter and Parmesan cheese,5.99,t,Appetizers
+114,11,Filet Mignon,"Tender filet mignon steak cooked to perfection, served with mashed potatoes and asparagus",29.99,t,Steaks
+115,11,Grilled Lobster Tail,"Butterflied lobster tail grilled with garlic butter, served with rice pilaf",34.99,t,Seafood
+116,11,New York Cheesecake,"Creamy cheesecake with a graham cracker crust, topped with fruit compote",7.99,t,Desserts
+117,12,Beef Tacos,"Soft tortillas filled with seasoned beef, lettuce, cheese, and salsa",3.99,t,Tacos
+118,12,Chicken Quesadilla,Grilled chicken and melted cheese folded in a flour tortilla,5.99,t,Quesadillas
+119,12,Guacamole,"Fresh avocado mixed with tomatoes, onions, cilantro, and lime juice",4.99,t,Appetizers
+"""  
+
+# Function to safely parse a line into a tuple
+def parse_line(line: str):
+    import csv
+    from io import StringIO
+
+    f = StringIO(line)
+    reader = csv.reader(f)
+    parts = next(reader)
+
+    restaurant_id = int(parts[1])
+    name = parts[2]
+    description = parts[3] if parts[3] else None
+    price = float(parts[4])
+    is_available = parts[5].lower() == 't'
+    category = parts[6]
+
+    return (restaurant_id, name, description, price, is_available, category)
+
+# Parse all lines into data tuples
+lines = raw_data.strip().splitlines()
+menu_data = [parse_line(line) for line in lines]
+
+# SQL query
+insert_query = """
+INSERT INTO Menu (restaurant_id, name, description, price, is_available, category)
+VALUES (%s, %s, %s, %s, %s, %s);
+"""
+
+# Insert data
+for item in menu_data:
+    Database.execute(insert_query, item)
+
+print(f"✅ Successfully inserted {len(menu_data)} records into the Menu table.")

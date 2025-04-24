@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments Management</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">Food Delivery Admin</div>
+            <nav>
+                <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="/admin/users"><i class="fas fa-users"></i> Users</a>
+                <a href="/admin/restaurants"><i class="fas fa-utensils"></i> Restaurants</a>
+                <a href="/admin/menu-items"><i class="fas fa-list"></i> Menu Items</a>
+                <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="/admin/payments" class="active"><i class="fas fa-credit-card"></i> Payments</a>
+                <a href="/admin/reviews"><i class="fas fa-star"></i> Reviews</a>
+                <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+                <a href="/admin/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Payments Management</h1>
+                <div class="user-info">
+                    <span>Admin</span>
+                    <img src="/static/img/admin-avatar.png" alt="Admin">
+                </div>
+            </header>
+
+            <!-- Payment Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Total Revenue</h3>
+                        <p id="totalRevenue">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Pending</h3>
+                        <p id="pendingPayments">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon failed">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Failed</h3>
+                        <p id="failedPayments">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Today's Revenue</h3>
+                        <p id="todayRevenue">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue Chart -->
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" id="searchPayment" placeholder="Search payments...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-options">
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="success">Success</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                    <select id="dateFilter">
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Payments Table -->
+            <div class="table-container">
+                <table id="paymentsTable">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Payments will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Payment Details Modal -->
+            <div id="paymentModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Payment Details</h2>
+                    <div id="paymentDetails">
+                        <div class="payment-info">
+                            <h3>Transaction Information</h3>
+                            <p><strong>Transaction ID:</strong> <span id="modalTransactionId"></span></p>
+                            <p><strong>Order ID:</strong> <span id="modalOrderId"></span></p>
+                            <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                            <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                        </div>
+                        <div class="customer-info">
+                            <h3>Customer Information</h3>
+                            <p><strong>Name:</strong> <span id="modalCustomer"></span></p>
+                            <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                        </div>
+                        <div class="payment-details">
+                            <h3>Payment Details</h3>
+                            <p><strong>Amount:</strong> $<span id="modalAmount"></span></p>
+                            <p><strong>Payment Method:</strong> <span id="modalMethod"></span></p>
+                            <p><strong>Card/Account:</strong> <span id="modalAccount"></span></p>
+                        </div>
+                        <div class="payment-actions">
+                            <button onclick="refundPayment()" class="refund-btn" id="refundButton">
+                                <i class="fas fa-undo"></i> Refund Payment
+                            </button>
+                            <button onclick="resendReceipt()" class="email-btn">
+                                <i class="fas fa-envelope"></i> Resend Receipt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+    <script src="/static/js/admin.js"></script>
+    <script>
+        let payments = [];
+        let currentPayment = null;
+        let revenueChart = null;
+
+        // Load initial data
+        function loadData() {
+            loadPayments();
+            updatePaymentStats();
+            initializeRevenueChart();
+        }
+
+        function loadPayments() {
+            fetch('/admin/api/payments')
+                .then(response => response.json())
+                .then(data => {
+                    payments = data;
+                    displayPayments(payments);
+                });
+        }
+
+        function updatePaymentStats() {
+            fetch('/admin/api/payments/stats')
+                .then(response => response.json())
+                .then(stats => {
+                    document.getElementById('totalRevenue').textContent = `$${stats.total_revenue.toFixed(2)}`;
+                    document.getElementById('pendingPayments').textContent = stats.pending;
+                    document.getElementById('failedPayments').textContent = stats.failed;
+                    document.getElementById('todayRevenue').textContent = `$${stats.today_revenue.toFixed(2)}`;
+                });
+        }
+
+        function initializeRevenueChart() {
+            fetch('/admin/api/payments/revenue-chart')
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('revenueChart').getContext('2d');
+                    if (revenueChart) {
+                        revenueChart.destroy();
+                    }
+                    revenueChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Daily Revenue',
+                                data: data.values,
+                                borderColor: 'rgb(75, 192, 192)',
+                                tension: 0.1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '$' + value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        function displayPayments(paymentsToDisplay) {
+            const tbody = document.querySelector('#paymentsTable tbody');
+            tbody.innerHTML = paymentsToDisplay.map(payment => `
+                <tr>
+                    <td>${payment.transaction_id}</td>
+                    <td>#${payment.order_id}</td>
+                    <td>${payment.customer_name}</td>
+                    <td>$${payment.amount.toFixed(2)}</td>
+                    <td>${payment.payment_method}</td>
+                    <td><span class="status ${payment.status.toLowerCase()}">${payment.status}</span></td>
+                    <td>${new Date(payment.payment_date).toLocaleString()}</td>
+                    <td>
+                        <button onclick="viewPayment('${payment.transaction_id}')" class="view-btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewPayment(transactionId) {
+            currentPayment = payments.find(p => p.transaction_id === transactionId);
+            if (currentPayment) {
+                document.getElementById('modalTransactionId').textContent = currentPayment.transaction_id;
+                document.getElementById('modalOrderId').textContent = currentPayment.order_id;
+                document.getElementById('modalStatus').textContent = currentPayment.status;
+                document.getElementById('modalDate').textContent = new Date(currentPayment.payment_date).toLocaleString();
+                document.getElementById('modalCustomer').textContent = currentPayment.customer_name;
+                document.getElementById('modalEmail').textContent = currentPayment.customer_email;
+                document.getElementById('modalAmount').textContent = currentPayment.amount.toFixed(2);
+                document.getElementById('modalMethod').textContent = currentPayment.payment_method;
+                document.getElementById('modalAccount').textContent = currentPayment.masked_account;
+
+                // Show/hide refund button based on payment status
+                document.getElementById('refundButton').style.display = 
+                    currentPayment.status === 'SUCCESS' ? 'block' : 'none';
+
+                document.getElementById('paymentModal').style.display = 'block';
+            }
+        }
+
+        function refundPayment() {
+            if (!currentPayment) return;
+            if (!confirm('Are you sure you want to refund this payment?')) return;
+
+            fetch(`/admin/api/payments/${currentPayment.transaction_id}/refund`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    loadData();
+                    document.getElementById('paymentModal').style.display = 'none';
+                }
+            });
+        }
+
+        function resendReceipt() {
+            if (!currentPayment) return;
+
+            fetch(`/admin/api/payments/${currentPayment.transaction_id}/resend-receipt`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Receipt has been resent successfully!');
+                }
+            });
+        }
+
+        // Search and filter functionality
+        document.getElementById('searchPayment').addEventListener('input', filterPayments);
+        document.getElementById('statusFilter').addEventListener('change', filterPayments);
+        document.getElementById('dateFilter').addEventListener('change', filterPayments);
+
+        function filterPayments() {
+            const searchTerm = document.getElementById('searchPayment').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            const filtered = payments.filter(payment => {
+                const matchesSearch = payment.transaction_id.toLowerCase().includes(searchTerm) ||
+                                    payment.order_id.toString().includes(searchTerm) ||
+                                    payment.customer_name.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || payment.status.toLowerCase() === statusFilter;
+                const matchesDate = filterByDate(payment.payment_date, dateFilter);
+                return matchesSearch && matchesStatus && matchesDate;
+            });
+
+            displayPayments(filtered);
+        }
+
+        function filterByDate(paymentDate, filter) {
+            const date = new Date(paymentDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            switch (filter) {
+                case 'today':
+                    return date >= today;
+                case 'week':
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return date >= weekAgo;
+                case 'month':
+                    const monthAgo = new Date(today);
+                    monthAgo.setMonth(monthAgo.getMonth() - 1);
+                    return date >= monthAgo;
+                default:
+                    return true;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('paymentModal')) {
+                document.getElementById('paymentModal').style.display = 'none';
+            }
+        }
+
+        // Initial load
+        loadData();
+    </script>
+</body>
+</html> 

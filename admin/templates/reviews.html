@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews Management</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">Food Delivery Admin</div>
+            <nav>
+                <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="/admin/users"><i class="fas fa-users"></i> Users</a>
+                <a href="/admin/restaurants"><i class="fas fa-utensils"></i> Restaurants</a>
+                <a href="/admin/menu-items"><i class="fas fa-list"></i> Menu Items</a>
+                <a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="/admin/payments"><i class="fas fa-credit-card"></i> Payments</a>
+                <a href="/admin/reviews" class="active"><i class="fas fa-star"></i> Reviews</a>
+                <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+                <a href="/admin/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Reviews Management</h1>
+                <div class="user-info">
+                    <span>Admin</span>
+                    <img src="/static/img/admin-avatar.png" alt="Admin">
+                </div>
+            </header>
+
+            <!-- Review Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Average Rating</h3>
+                        <p id="avgRating">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Total Reviews</h3>
+                        <p id="totalReviews">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Pending Responses</h3>
+                        <p id="pendingResponses">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Critical Reviews</h3>
+                        <p id="criticalReviews">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rating Distribution Chart -->
+            <div class="chart-container">
+                <canvas id="ratingDistribution"></canvas>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" id="searchReview" placeholder="Search reviews...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-options">
+                    <select id="ratingFilter">
+                        <option value="">All Ratings</option>
+                        <option value="5">5 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="2">2 Stars</option>
+                        <option value="1">1 Star</option>
+                    </select>
+                    <select id="responseFilter">
+                        <option value="">All Status</option>
+                        <option value="responded">Responded</option>
+                        <option value="pending">Pending Response</option>
+                    </select>
+                    <select id="dateFilter">
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Reviews Table -->
+            <div class="table-container">
+                <table id="reviewsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Restaurant</th>
+                            <th>Rating</th>
+                            <th>Review</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Reviews will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Review Details Modal -->
+            <div id="reviewModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Review Details</h2>
+                    <div id="reviewDetails">
+                        <div class="review-info">
+                            <div class="review-header">
+                                <div class="customer-info">
+                                    <h3>Customer Information</h3>
+                                    <p><strong>Name:</strong> <span id="modalCustomer"></span></p>
+                                    <p><strong>Order ID:</strong> <span id="modalOrderId"></span></p>
+                                    <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                                </div>
+                                <div class="restaurant-info">
+                                    <h3>Restaurant Information</h3>
+                                    <p><strong>Name:</strong> <span id="modalRestaurant"></span></p>
+                                    <p><strong>Rating:</strong> <span id="modalRating"></span></p>
+                                </div>
+                            </div>
+                            <div class="review-content">
+                                <h3>Review</h3>
+                                <p id="modalReviewText"></p>
+                            </div>
+                            <div class="review-response" id="responseSection">
+                                <h3>Response</h3>
+                                <div id="existingResponse" style="display: none;">
+                                    <p id="modalResponse"></p>
+                                    <p><small>Responded on: <span id="modalResponseDate"></span></small></p>
+                                    <button onclick="editResponse()" class="edit-btn">
+                                        <i class="fas fa-edit"></i> Edit Response
+                                    </button>
+                                </div>
+                                <div id="responseForm">
+                                    <textarea id="responseText" rows="4" placeholder="Type your response here..."></textarea>
+                                    <button onclick="submitResponse()" class="submit-btn">
+                                        <i class="fas fa-paper-plane"></i> Submit Response
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-actions">
+                            <button onclick="flagReview()" class="flag-btn" id="flagButton">
+                                <i class="fas fa-flag"></i> Flag Review
+                            </button>
+                            <button onclick="hideReview()" class="hide-btn" id="hideButton">
+                                <i class="fas fa-eye-slash"></i> Hide Review
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+    <script src="/static/js/admin.js"></script>
+    <script>
+        let reviews = [];
+        let currentReview = null;
+        let ratingChart = null;
+
+        // Load initial data
+        function loadData() {
+            loadReviews();
+            updateReviewStats();
+            initializeRatingChart();
+        }
+
+        function loadReviews() {
+            fetch('/admin/api/reviews')
+                .then(response => response.json())
+                .then(data => {
+                    reviews = data;
+                    displayReviews(reviews);
+                });
+        }
+
+        function updateReviewStats() {
+            fetch('/admin/api/reviews/stats')
+                .then(response => response.json())
+                .then(stats => {
+                    document.getElementById('avgRating').textContent = stats.average_rating.toFixed(1);
+                    document.getElementById('totalReviews').textContent = stats.total_reviews;
+                    document.getElementById('pendingResponses').textContent = stats.pending_responses;
+                    document.getElementById('criticalReviews').textContent = stats.critical_reviews;
+                });
+        }
+
+        function initializeRatingChart() {
+            fetch('/admin/api/reviews/distribution')
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('ratingDistribution').getContext('2d');
+                    if (ratingChart) {
+                        ratingChart.destroy();
+                    }
+                    ratingChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+                            datasets: [{
+                                label: 'Number of Reviews',
+                                data: data.distribution,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.5)',
+                                    'rgba(255, 159, 64, 0.5)',
+                                    'rgba(255, 205, 86, 0.5)',
+                                    'rgba(75, 192, 192, 0.5)',
+                                    'rgba(54, 162, 235, 0.5)'
+                                ],
+                                borderColor: [
+                                    'rgb(255, 99, 132)',
+                                    'rgb(255, 159, 64)',
+                                    'rgb(255, 205, 86)',
+                                    'rgb(75, 192, 192)',
+                                    'rgb(54, 162, 235)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        function displayReviews(reviewsToDisplay) {
+            const tbody = document.querySelector('#reviewsTable tbody');
+            tbody.innerHTML = reviewsToDisplay.map(review => `
+                <tr>
+                    <td>${new Date(review.review_date).toLocaleDateString()}</td>
+                    <td>${review.customer_name}</td>
+                    <td>${review.restaurant_name}</td>
+                    <td>${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</td>
+                    <td>${review.review_text.substring(0, 100)}${review.review_text.length > 100 ? '...' : ''}</td>
+                    <td><span class="status ${review.response ? 'success' : 'pending'}">${review.response ? 'Responded' : 'Pending'}</span></td>
+                    <td>
+                        <button onclick="viewReview('${review.review_id}')" class="view-btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewReview(reviewId) {
+            currentReview = reviews.find(r => r.review_id === reviewId);
+            if (currentReview) {
+                document.getElementById('modalCustomer').textContent = currentReview.customer_name;
+                document.getElementById('modalOrderId').textContent = currentReview.order_id;
+                document.getElementById('modalDate').textContent = new Date(currentReview.review_date).toLocaleString();
+                document.getElementById('modalRestaurant').textContent = currentReview.restaurant_name;
+                document.getElementById('modalRating').textContent = '★'.repeat(currentReview.rating) + '☆'.repeat(5-currentReview.rating);
+                document.getElementById('modalReviewText').textContent = currentReview.review_text;
+
+                const existingResponse = document.getElementById('existingResponse');
+                const responseForm = document.getElementById('responseForm');
+
+                if (currentReview.response) {
+                    document.getElementById('modalResponse').textContent = currentReview.response;
+                    document.getElementById('modalResponseDate').textContent = new Date(currentReview.response_date).toLocaleString();
+                    existingResponse.style.display = 'block';
+                    responseForm.style.display = 'none';
+                } else {
+                    existingResponse.style.display = 'none';
+                    responseForm.style.display = 'block';
+                    document.getElementById('responseText').value = '';
+                }
+
+                document.getElementById('reviewModal').style.display = 'block';
+            }
+        }
+
+        function submitResponse() {
+            if (!currentReview) return;
+            const response = document.getElementById('responseText').value.trim();
+            if (!response) {
+                alert('Please enter a response');
+                return;
+            }
+
+            fetch(`/admin/api/reviews/${currentReview.review_id}/respond`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ response })
+            })
+            .then(response => {
+                if (response.ok) {
+                    loadData();
+                    document.getElementById('reviewModal').style.display = 'none';
+                }
+            });
+        }
+
+        function editResponse() {
+            if (!currentReview || !currentReview.response) return;
+            document.getElementById('existingResponse').style.display = 'none';
+            document.getElementById('responseForm').style.display = 'block';
+            document.getElementById('responseText').value = currentReview.response;
+        }
+
+        function flagReview() {
+            if (!currentReview) return;
+            if (!confirm('Are you sure you want to flag this review for moderation?')) return;
+
+            fetch(`/admin/api/reviews/${currentReview.review_id}/flag`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    loadData();
+                    document.getElementById('reviewModal').style.display = 'none';
+                }
+            });
+        }
+
+        function hideReview() {
+            if (!currentReview) return;
+            if (!confirm('Are you sure you want to hide this review? This action can be reversed.')) return;
+
+            fetch(`/admin/api/reviews/${currentReview.review_id}/hide`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    loadData();
+                    document.getElementById('reviewModal').style.display = 'none';
+                }
+            });
+        }
+
+        // Search and filter functionality
+        document.getElementById('searchReview').addEventListener('input', filterReviews);
+        document.getElementById('ratingFilter').addEventListener('change', filterReviews);
+        document.getElementById('responseFilter').addEventListener('change', filterReviews);
+        document.getElementById('dateFilter').addEventListener('change', filterReviews);
+
+        function filterReviews() {
+            const searchTerm = document.getElementById('searchReview').value.toLowerCase();
+            const ratingFilter = document.getElementById('ratingFilter').value;
+            const responseFilter = document.getElementById('responseFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            const filtered = reviews.filter(review => {
+                const matchesSearch = review.customer_name.toLowerCase().includes(searchTerm) ||
+                                   review.restaurant_name.toLowerCase().includes(searchTerm) ||
+                                   review.review_text.toLowerCase().includes(searchTerm);
+                const matchesRating = !ratingFilter || review.rating === parseInt(ratingFilter);
+                const matchesResponse = !responseFilter || 
+                                     (responseFilter === 'responded' && review.response) ||
+                                     (responseFilter === 'pending' && !review.response);
+                const matchesDate = filterByDate(review.review_date, dateFilter);
+                return matchesSearch && matchesRating && matchesResponse && matchesDate;
+            });
+
+            displayReviews(filtered);
+        }
+
+        function filterByDate(reviewDate, filter) {
+            const date = new Date(reviewDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            switch (filter) {
+                case 'today':
+                    return date >= today;
+                case 'week':
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return date >= weekAgo;
+                case 'month':
+                    const monthAgo = new Date(today);
+                    monthAgo.setMonth(monthAgo.getMonth() - 1);
+                    return date >= monthAgo;
+                default:
+                    return true;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('reviewModal')) {
+                document.getElementById('reviewModal').style.display = 'none';
+            }
+        }
+
+        // Initial load
+        loadData();
+    </script>
+</body>
+</html> 

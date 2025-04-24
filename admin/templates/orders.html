@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Management</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">Food Delivery Admin</div>
+            <nav>
+                <a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="/admin/users"><i class="fas fa-users"></i> Users</a>
+                <a href="/admin/restaurants"><i class="fas fa-utensils"></i> Restaurants</a>
+                <a href="/admin/menu-items"><i class="fas fa-list"></i> Menu Items</a>
+                <a href="/admin/orders" class="active"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="/admin/payments"><i class="fas fa-credit-card"></i> Payments</a>
+                <a href="/admin/reviews"><i class="fas fa-star"></i> Reviews</a>
+                <a href="/admin/settings"><i class="fas fa-cog"></i> Settings</a>
+                <a href="/admin/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Orders Management</h1>
+                <div class="user-info">
+                    <span>Admin</span>
+                    <img src="/static/img/admin-avatar.png" alt="Admin">
+                </div>
+            </header>
+
+            <!-- Order Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Pending Orders</h3>
+                        <p id="pendingOrders">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon processing">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Processing</h3>
+                        <p id="processingOrders">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon delivered">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Delivered Today</h3>
+                        <p id="deliveredOrders">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon cancelled">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Cancelled</h3>
+                        <p id="cancelledOrders">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" id="searchOrder" placeholder="Search orders...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-options">
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <select id="dateFilter">
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="table-container">
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Restaurant</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Orders will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Order Details Modal -->
+            <div id="orderModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Order Details</h2>
+                    <div id="orderDetails">
+                        <div class="order-info">
+                            <h3>Order Information</h3>
+                            <p><strong>Order ID:</strong> <span id="modalOrderId"></span></p>
+                            <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                            <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                        </div>
+                        <div class="customer-info">
+                            <h3>Customer Information</h3>
+                            <p><strong>Name:</strong> <span id="modalCustomer"></span></p>
+                            <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
+                            <p><strong>Address:</strong> <span id="modalAddress"></span></p>
+                        </div>
+                        <div class="order-items">
+                            <h3>Order Items</h3>
+                            <table id="modalItems">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="order-summary">
+                            <p><strong>Subtotal:</strong> $<span id="modalSubtotal"></span></p>
+                            <p><strong>Delivery Fee:</strong> $<span id="modalDeliveryFee"></span></p>
+                            <p><strong>Total:</strong> $<span id="modalTotal"></span></p>
+                        </div>
+                        <div class="status-update">
+                            <h3>Update Status</h3>
+                            <select id="statusUpdate">
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="out_for_delivery">Out for Delivery</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <button onclick="updateOrderStatus()" class="update-btn">Update Status</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+    <script src="/static/js/admin.js"></script>
+    <script>
+        let orders = [];
+        let currentOrder = null;
+
+        // Load initial data
+        function loadData() {
+            loadOrders();
+            updateOrderStats();
+        }
+
+        function loadOrders() {
+            fetch('/admin/api/orders')
+                .then(response => response.json())
+                .then(data => {
+                    orders = data;
+                    displayOrders(orders);
+                });
+        }
+
+        function updateOrderStats() {
+            fetch('/admin/api/orders/stats')
+                .then(response => response.json())
+                .then(stats => {
+                    document.getElementById('pendingOrders').textContent = stats.pending;
+                    document.getElementById('processingOrders').textContent = stats.processing;
+                    document.getElementById('deliveredOrders').textContent = stats.delivered_today;
+                    document.getElementById('cancelledOrders').textContent = stats.cancelled;
+                });
+        }
+
+        function displayOrders(ordersToDisplay) {
+            const tbody = document.querySelector('#ordersTable tbody');
+            tbody.innerHTML = ordersToDisplay.map(order => `
+                <tr>
+                    <td>#${order.order_id}</td>
+                    <td>${order.customer_name}</td>
+                    <td>${order.restaurant_name}</td>
+                    <td>${order.items.length} items</td>
+                    <td>$${order.total_amount.toFixed(2)}</td>
+                    <td><span class="status ${order.status.toLowerCase()}">${order.status}</span></td>
+                    <td>${new Date(order.order_time).toLocaleString()}</td>
+                    <td>
+                        <button onclick="viewOrder(${order.order_id})" class="view-btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewOrder(orderId) {
+            currentOrder = orders.find(o => o.order_id === orderId);
+            if (currentOrder) {
+                document.getElementById('modalOrderId').textContent = currentOrder.order_id;
+                document.getElementById('modalStatus').textContent = currentOrder.status;
+                document.getElementById('modalDate').textContent = new Date(currentOrder.order_time).toLocaleString();
+                document.getElementById('modalCustomer').textContent = currentOrder.customer_name;
+                document.getElementById('modalPhone').textContent = currentOrder.customer_phone;
+                document.getElementById('modalAddress').textContent = currentOrder.delivery_address;
+
+                const itemsTable = document.querySelector('#modalItems tbody');
+                itemsTable.innerHTML = currentOrder.items.map(item => `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>$${item.price.toFixed(2)}</td>
+                        <td>$${(item.quantity * item.price).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('modalSubtotal').textContent = currentOrder.subtotal.toFixed(2);
+                document.getElementById('modalDeliveryFee').textContent = currentOrder.delivery_fee.toFixed(2);
+                document.getElementById('modalTotal').textContent = currentOrder.total_amount.toFixed(2);
+                document.getElementById('statusUpdate').value = currentOrder.status.toLowerCase();
+
+                document.getElementById('orderModal').style.display = 'block';
+            }
+        }
+
+        function updateOrderStatus() {
+            if (!currentOrder) return;
+
+            const newStatus = document.getElementById('statusUpdate').value;
+            fetch(`/admin/api/orders/${currentOrder.order_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => {
+                if (response.ok) {
+                    loadData();
+                    document.getElementById('orderModal').style.display = 'none';
+                }
+            });
+        }
+
+        // Search and filter functionality
+        document.getElementById('searchOrder').addEventListener('input', filterOrders);
+        document.getElementById('statusFilter').addEventListener('change', filterOrders);
+        document.getElementById('dateFilter').addEventListener('change', filterOrders);
+
+        function filterOrders() {
+            const searchTerm = document.getElementById('searchOrder').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            const filtered = orders.filter(order => {
+                const matchesSearch = order.order_id.toString().includes(searchTerm) ||
+                                    order.customer_name.toLowerCase().includes(searchTerm) ||
+                                    order.restaurant_name.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || order.status.toLowerCase() === statusFilter;
+                const matchesDate = filterByDate(order.order_time, dateFilter);
+                return matchesSearch && matchesStatus && matchesDate;
+            });
+
+            displayOrders(filtered);
+        }
+
+        function filterByDate(orderTime, filter) {
+            const orderDate = new Date(orderTime);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            switch (filter) {
+                case 'today':
+                    return orderDate >= today;
+                case 'week':
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return orderDate >= weekAgo;
+                case 'month':
+                    const monthAgo = new Date(today);
+                    monthAgo.setMonth(monthAgo.getMonth() - 1);
+                    return orderDate >= monthAgo;
+                default:
+                    return true;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('orderModal')) {
+                document.getElementById('orderModal').style.display = 'none';
+            }
+        }
+
+        // Initial load
+        loadData();
+    </script>
+</body>
+</html> 

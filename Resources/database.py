@@ -1,8 +1,9 @@
 import os
 from dotenv import load_dotenv
 import psycopg2
+from urllib.parse import urlparse
 from typing import Tuple, List, Any
- 
+
 load_dotenv()  # Load environment variables from .env file
 
 class Database:
@@ -11,54 +12,49 @@ class Database:
     @classmethod
     def _get_connection(cls):
         if not cls._connection:
-            database = os.getenv('Database')
-            user = os.getenv('User_name')
-            host = os.getenv('URL')
-            password = os.getenv('DB_PASS')
-            port = '5432'  # Default Port Number For PostgreSQL
+            db_url = os.getenv("DATABASE_URL")
+            if not db_url:
+                print("❌ DATABASE_URL not found in .env file.")
+                return None
 
             try:
+                result = urlparse(db_url)
+
                 cls._connection = psycopg2.connect(
-                    dbname=database, user=user,
-                    password=password, host=host, port=port
+                    dbname=result.path[1:],   # Remove the leading '/'
+                    user=result.username,
+                    password=result.password,
+                    host=result.hostname,
+                    port=result.port,
+                    sslmode='require'
                 )
+                print("✅ Connected to NeonDB successfully.")
             except Exception as e:
-                print(f"Error connecting to database: {e}\nCheck Your .env Fle Credentials")
+                print(f"❌ Error connecting to NeonDB: {e}\nCheck your .env file credentials.")
         return cls._connection
 
     @classmethod
     def execute(cls, query: str, params: Tuple = None, fetch: bool = False) -> List[Tuple[Any]]:
-        """
-        Executes a SQL query on the database.
-
-        Args:
-            query (str): The SQL query to be executed.
-            params (tuple, optional): Parameters to be passed to the query (for parameterized queries). Defaults to None.
-            fetch (bool, optional): Whether to fetch results after execution. Defaults to False.
-
-        Returns:
-            list or None: If fetch is True, returns a list of results. Otherwise, None.
-        """
         try:
             connection = cls._get_connection()
+            if not connection:
+                return []
+
             with connection:
                 with connection.cursor() as cursor:
                     cursor.execute(query, params)
                     if fetch:
                         return cursor.fetchall()
         except Exception as e:
-            print(f"Error executing query: {e}")
+            print(f"❌ Error executing query: {e}")
         return []
 
     @classmethod
     def close(cls):
-        """
-        Closes the connection to the database.
-        """
         if cls._connection:
             cls._connection.close()
             cls._connection = None
-    
+            print("🔒 Connection to NeonDB closed.")
 
 if __name__ == '__main__':
-    print("Run >>>>>>>>  main.py <<<<<<<< File")
+    print("▶️ Run >>>>>>>>  main.py <<<<<<<< File")

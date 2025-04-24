@@ -58,7 +58,6 @@ CREATE TABLE Payments (
   amount_paid DECIMAL(10, 2) NOT NULL,
   payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 -- Order_Details table
 CREATE TABLE Order_Details (
   order_detail_id SERIAL PRIMARY KEY,
@@ -68,7 +67,6 @@ CREATE TABLE Order_Details (
   item_price DECIMAL(10, 2) NOT NULL
 );
 
--- Reviews table
 CREATE TABLE Reviews (
   review_id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES Users(user_id),
