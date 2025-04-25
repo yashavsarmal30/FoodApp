@@ -105,15 +105,15 @@ class HomePage(Page):
             ("Belgian Waffle", "./Images/belgianwaffleoutlet.jpg", "4.8", "Desserts, Cafe"),
             ("Juice Center", "./Images/juicecenteroutlet.jpg", "4.3", "Beverages, Healthy"),
             
-            ("Pasta Palace", "./Images/pastaoutlet.jpg", "4.6", "Italian, Pasta"),
-            ("Street Bites", "./Images/streetfoodoutlet.jpg", "4.1", "Street Food"),
-            ("Sweet Tooth", "./Images/dessertsoutlet.jpg", "4.7", "Desserts"),
-            ("Thali House", "./Images/thalioutlet.jpg", "4.4", "Indian, Thali"),
-            ("Wrap It Up", "./Images/wrapoutlet.jpg", "4.2", "Wraps, Fast Food"),
-            ("Sushi World", "./Images/sushioutlet.jpg", "4.9", "Japanese, Sushi"),
-            ("Salad Stop", "./Images/saladoutlet.jpg", "4.5", "Healthy, Salads"),
-            ("BBQ Nation", "./Images/bbqoutlet.jpg", "4.6", "BBQ, Grill"),
-            ("Vegan Delight", "./Images/veganoutlet.jpg", "4.8", "Vegan, Healthy")
+        #     ("Pasta Palace", "./Images/pastaoutlet.jpg", "4.6", "Italian, Pasta"),
+        #     ("Street Bites", "./Images/streetfoodoutlet.jpg", "4.1", "Street Food"),
+        #     ("Sweet Tooth", "./Images/dessertsoutlet.jpg", "4.7", "Desserts"),
+        #     ("Thali House", "./Images/thalioutlet.jpg", "4.4", "Indian, Thali"),
+        #     ("Wrap It Up", "./Images/wrapoutlet.jpg", "4.2", "Wraps, Fast Food"),
+        #     ("Sushi World", "./Images/sushioutlet.jpg", "4.9", "Japanese, Sushi"),
+        #     ("Salad Stop", "./Images/saladoutlet.jpg", "4.5", "Healthy, Salads"),
+        #     ("BBQ Nation", "./Images/bbqoutlet.jpg", "4.6", "BBQ, Grill"),
+        #     ("Vegan Delight", "./Images/veganoutlet.jpg", "4.8", "Vegan, Healthy")
         ]
         
         for name, path, rating, cuisine in restaurants:
